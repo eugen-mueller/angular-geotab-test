@@ -26,16 +26,20 @@ export class AppComponent implements OnInit {
     this.randomDevice = await this.getRandomDevice();
     console.log(this.randomDevice);
 
-
   }
 
   getSession() {
 
     return new Promise<any>((resolve, reject) => {
 
-      this.api.getSession((session: { userName: any; }) => {
-         resolve(session.userName);
-      });
+      this.api.getSession().then((session) => {
+        
+        resolve(session.userName);
+    
+    }).catch(e => {
+
+        reject(e);
+    });
 
     });
   }
@@ -45,14 +49,16 @@ export class AppComponent implements OnInit {
     
     return new Promise<any>((resolve, reject) => {
 
-        this.api.call("Get", {
+        this.api.call('Get', {
             "typeName": "Device",
             "resultsLimit": 1
-        }, result => {
+        }).then(result => {
+
             resolve(result);
-        }, err => {
-            console.error("Failed:", err);
-            reject();
+        })
+        .catch(e => {
+
+            reject(e);
         });
 
     });
